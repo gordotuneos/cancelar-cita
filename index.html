@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cancelar cita</title>
+</head>
+<body style="font-family: Arial, sans-serif; text-align:center; padding:40px;">
+
+  <h2>Cancelar cita</h2>
+  <p>Pulsa el botón para confirmar la cancelación de tu cita.</p>
+
+  <a id="btn"
+     style="display:inline-block;
+            padding:15px 25px;
+            background:#d32f2f;
+            color:white;
+            text-decoration:none;
+            font-size:18px;
+            border-radius:6px;">
+     Confirmar cancelación
+  </a>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbyN6eBAnxmseclJ1yYQ0PeYQyDonj7EB_6DfLMqr4-nxwLU814NWF0OtJdAEOK6I9a6sQ/exec";
+
+    document.getElementById("btn").href =
+      scriptUrl + "?" + params.toString();
+  </script>
+
+</body>
+</html>
