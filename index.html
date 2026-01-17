@@ -5,29 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cancelar cita</title>
 </head>
+
 <body style="font-family: Arial, sans-serif; text-align:center; padding:40px;">
 
   <h2>Cancelar cita</h2>
   <p>Pulsa el botón para confirmar la cancelación de tu cita.</p>
 
-  <a id="btn"
-     style="display:inline-block;
-            padding:15px 25px;
-            background:#d32f2f;
-            color:white;
-            text-decoration:none;
-            font-size:18px;
-            border-radius:6px;">
-     Confirmar cancelación
-  </a>
+  <button id="btn"
+    style="padding:15px 25px;
+           background:#d32f2f;
+           color:white;
+           font-size:18px;
+           border:none;
+           border-radius:6px;
+           cursor:pointer;">
+    Confirmar cancelación
+  </button>
+
+  <p id="msg" style="margin-top:30px;font-size:18px;"></p>
 
   <script>
     const params = new URLSearchParams(window.location.search);
+    const eventId = params.get("eventId");
 
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyN6eBAnxmseclJ1yYQ0PeYQyDonj7EB_6DfLMqr4-nxwLU814NWF0OtJdAEOK6I9a6sQ/exec";
 
-    document.getElementById("btn").href =
-      scriptUrl + "?" + params.toString();
+    const btn = document.getElementById("btn");
+    const msg = document.getElementById("msg");
+
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      btn.innerText = "Cancelando...";
+
+      try {
+        const res = await fetch(
+          scriptUrl + "?eventId=" + encodeURIComponent(eventId)
+        );
+
+        const data = await res.json();
+
+        if (data.ok) {
+          msg.innerHTML = "✅ " + data.msg;
+        } else {
+          msg.innerHTML = "❌ " + data.msg;
+        }
+
+      } catch (e) {
+        msg.innerHTML = "❌ Error de conexión. Inténtalo de nuevo.";
+      }
+    });
   </script>
 
 </body>
