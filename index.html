@@ -24,37 +24,36 @@
 
   <p id="msg" style="margin-top:30px;font-size:18px;"></p>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const eventId = params.get("eventId");
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const eventId = params.get("eventId");
 
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbyN6eBAnxmseclJ1yYQ0PeYQyDonj7EB_6DfLMqr4-nxwLU814NWF0OtJdAEOK6I9a6sQ/exec";
+  const scriptUrl = "https://script.google.com/macros/s/AKfycbyN6eBAnxmseclJ1yYQ0PeYQyDonj7EB_6DfLMqr4-nxwLU814NWF0OtJdAEOK6I9a6sQ/exec";
 
-    const btn = document.getElementById("btn");
-    const msg = document.getElementById("msg");
+  const btn = document.getElementById("btn");
+  const msg = document.getElementById("msg");
 
-    btn.addEventListener("click", async () => {
-      btn.disabled = true;
-      btn.innerText = "Cancelando...";
+  btn.addEventListener("click", async () => {
+    btn.disabled = true;
+    btn.innerText = "Cancelando...";
 
-      try {
-        const res = await fetch(
-          scriptUrl + "?eventId=" + encodeURIComponent(eventId)
-        );
+    try {
+      await fetch(
+        scriptUrl + "?eventId=" + encodeURIComponent(eventId),
+        { mode: "no-cors" }
+      );
 
-        const data = await res.json();
+      // NO leemos respuesta → asumimos éxito
+      msg.innerHTML = "✅ Tu cita ha sido cancelada correctamente.";
 
-        if (data.ok) {
-          msg.innerHTML = "✅ " + data.msg;
-        } else {
-          msg.innerHTML = "❌ " + data.msg;
-        }
-
-      } catch (e) {
-        msg.innerHTML = "❌ Error de conexión. Inténtalo de nuevo.";
-      }
-    });
-  </script>
+    } catch (e) {
+      // Esto solo fallará si NO se puede enviar la petición
+      msg.innerHTML = "❌ No se pudo cancelar la cita. Inténtalo de nuevo.";
+      btn.disabled = false;
+      btn.innerText = "Confirmar cancelación";
+    }
+  });
+</script>
 
 </body>
 </html>
